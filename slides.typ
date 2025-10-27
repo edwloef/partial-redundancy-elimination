@@ -33,15 +33,14 @@
 
 	eine Programmoptimierung, die mittels einer Datenflussanalyse gemeinsame Teilausdrücke sucht und in Zwischenvariablen rauszieht
 
+	#show: later
 	#toolbox.side-by-side[
-		#show: later
 		aus
 			```py
 			a = b * c + g
 			d = b * c * e
 			```
 	][
-		#show: later
 		wird
 		```py
 		tmp = b * c
@@ -56,8 +55,8 @@
 
 	eine Programmoptimierung, die mittels einer Datenflussanalyse zur Laufzeit konstante Ausdrücke aus dem Schleifenrumpf in den Schleifenkopf bewegt
 
+	#show: later
 	#toolbox.side-by-side[
-		#show: later
 		aus
 		```py
 		while i < n:
@@ -66,7 +65,6 @@
 			i = i + 1
 		```
 	][
-		#show: later
 		wird
 		```py
 		if i < n:
@@ -79,4 +77,20 @@
 					break
 		```
 	]
+]
+
+#slide[
+	== Geschichte
+
+	- Morel, Renvoise:
+		- vier beidseitige Datenflussanalysen
+		- nicht optimal
+		- später verbessert von Dhamdhere, aber immer noch suboptimal
+	- Knoop, Ruthing, Steffen:
+		- vier einseitige Datenflussanalysen
+		- optimal
+		- später abgewandelt von Drechsler und Stadel
+	- Roy:
+		- drei einfache Datenflussanalysen
+		- optimal
 ]
