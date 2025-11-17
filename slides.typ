@@ -16,7 +16,8 @@
 	#set align(horizon)
 
 	Reshma, Sreekala, Vineeth:\
-	#text(1.5em)[Partial Redundancy Elimination in Two Iterative Data Flow Analyses]
+	#text(1.5em)[Partial Redundancy Elimination in Two Iterative Data Flow
+		Analyses]
 
 	\
 	Edwin Löffler, 15.12.2025
@@ -25,13 +26,15 @@
 #slide[
 	== Was war das nochmal?
 
-	eine Programmoptimierung, die Common Subexpression Elimination (CSE) und Loop Invariant Code Motion (LICM) zu einer Optimierung kombiniert
+	eine Programmoptimierung, die Common Subexpression Elimination (CSE) und
+	Loop Invariant Code Motion (LICM) zu einer Optimierung kombiniert
 ]
 
 #slide[
 	=== Konkret -- CSE
 
-	eine Programmoptimierung, die mittels einer Datenflussanalyse gemeinsame Teilausdrücke sucht und in Zwischenvariablen rauszieht
+	eine Programmoptimierung, die mittels einer Datenflussanalyse gemeinsame
+	Teilausdrücke sucht und in Zwischenvariablen rauszieht
 
 	#show: later
 	#toolbox.side-by-side[
@@ -53,7 +56,8 @@
 #slide[
 	=== Konkret -- LICM
 
-	eine Programmoptimierung, die mittels einer Datenflussanalyse zur Laufzeit konstante Ausdrücke aus dem Schleifenrumpf in den Schleifenkopf bewegt
+	eine Programmoptimierung, die mittels einer Datenflussanalyse zur Laufzeit
+	konstante Ausdrücke aus dem Schleifenrumpf in den Schleifenkopf bewegt
 
 	#show: later
 	#toolbox.side-by-side[
@@ -98,7 +102,7 @@
 ]
 
 #slide[
-	== Was ist ein Kontrollflussgraph?
+	== Wie sieht unser Kontrollflussgraph aus?
 
 	- ein gerichteter Graph $G=(V,E,"entry","exit")$
 		- $V$ als Menge aller Knoten
@@ -106,7 +110,8 @@
 		- $E$ als Menge aller Kanten
 			- die Kante von $i$ nach $j$ wird dargestellt als $(i, j)$
 	#show: later
-	- jeder Knoten enthält höchstens eine Aussage der Form $"Variable"="Ausdruck"$
+	- jeder Knoten enthält höchstens eine Aussage der Form
+		$"Variable"="Ausdruck"$
 	#show: later
 	- jeder Knoten $n$ hat
 		- direkte Vorgänger $"pred"(n)={m|(m,n)in E}$
@@ -171,4 +176,67 @@
 		erwartet am Punkt $p$, falls $e$ an $p$ teilweise erwartet ist und der
 		Pfad von dem Punkt $k$, ab dem $e$ teilweise erwartet ist, zu $p$,
 		sicher ist
+]
+
+#slide[
+	=== Notation
+
+	Für den Ausdruck $e$ gilt:
+	- $"AvLoc"_i$ --  $e$ ist am Ausgang des Knotens $i$ lokal verfügbar
+	- $"AntLoc"_i$ --  $e$ ist am Eingang des Knotens $i$ lokal erwartet
+	- $"Transp"_i$ --  $e$ ist im Knoten $i$ transparent
+	- $"AvIn"_i\/"AvOut"_i$ --  $e$ ist am Ein-/Ausgang des Knotens $i$
+		verfügbar
+	- $"AntIn"_i\/"AntOut"_i$ --  $e$ ist am Ein-/Ausgang des Knotens $i$
+		erwartet
+	- $"SpavPathIn"_i\/"SpavPathOut"_i$ --  Ein-/Ausgang des Knotens $i$ ist auf
+		dem sicher teilweise verfügbaren Pfad von $e$
+	- $"SredPathIn"_i\/"SredPathOut"_i$ --  Ein-/Ausgang des Knotens $i$ ist auf
+		dem sicher teilweise erwarteten Pfad von $e$
+]
+
+#slide[
+	== Grundidee
+
+	- Erkennung
+		- wir brauchen Informationen über teilweise verfügbare Ausdrücke
+	- Eliminierung
+		- wir brauchen Informationen über teilweise erwartete Ausdrücke
+	#show: later
+	- wir suchen Redundanzpfade für ein Ausdruck $e$
+		- wir markieren alle Punkte, wo $e$ sowohl teilweise verfügbar als auch
+			teilweise erwartet ist
+		- wir verbinden adjazente markierte Punkte zu einem Redundanzpfad
+]
+
+#slide[
+	=== Beispiel
+
+	#align(center)[
+		#image("example1.svg", height: 85%)
+	]
+]
+
+#slide[
+	=== Beispiel
+
+	#align(center)[
+		#image("example2.svg", height: 85%)
+	]
+]
+
+#slide[
+	=== Beispiel
+
+	#align(center)[
+		#image("example3.svg", height: 85%)
+	]
+]
+
+#slide[
+	=== Beispiel
+
+	#align(center)[
+		#image("example4.svg", height: 85%)
+	]
 ]
