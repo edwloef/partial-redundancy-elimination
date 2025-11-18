@@ -12,7 +12,7 @@ digraph G {
 
     1 [label="a = x + y",xlabel="1"];
     2 [label="",xlabel="2"];
-    3 [label="",xlabel="3"];
+    3 [label="",xlabel="3",color="red"];
     4 [label="b = x + y",xlabel="4"];
 
     1 -> 3 [color=black];

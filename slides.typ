@@ -89,7 +89,7 @@
 	- Morel, Renvoise:
 		- vier beidseitige Datenflussanalysen
 		- nicht optimal
-		- später verbessert von Dhamdhere, aber immer noch suboptimal
+		- später verbessert von Dhamdhere, aber immer noch nicht optimal
 	#show: later
 	- Knoop, Ruthing, Steffen:
 		- vier einseitige Datenflussanalysen
@@ -176,34 +176,74 @@
 ]
 
 #slide[
-	=== Beispiel
+	=== Beispiel 1
 
 	#align(center)[
-		#image("example1.svg", height: 85%)
+		#image("example1_1.svg", height: 85%)
 	]
 ]
 
 #slide[
-	=== Beispiel
+	=== Beispiel 1
 
 	#align(center)[
-		#image("example2.svg", height: 85%)
+		#image("example1_2.svg", height: 85%)
 	]
 ]
 
 #slide[
-	=== Beispiel
+	=== Beispiel 1
 
 	#align(center)[
-		#image("example3.svg", height: 85%)
+		#image("example1_3.svg", height: 85%)
 	]
 ]
 
 #slide[
-	=== Beispiel
+	=== Beispiel 1
 
 	#align(center)[
-		#image("example4.svg", height: 85%)
+		#image("example1_4.svg", height: 85%)
+	]
+]
+
+#slide[
+	=== Beispiel 2
+
+	#align(center)[
+		#image("example2_1.svg", height: 85%)
+	]
+]
+
+#slide[
+	=== Beispiel 2
+
+	#align(center)[
+		#image("example2_2.svg", height: 85%)
+	]
+]
+
+#slide[
+	=== Beispiel 2
+
+	#align(center)[
+		#image("example2_3.svg", height: 85%)
+	]
+]
+
+#slide[
+	=== Beispiel 2
+
+	#align(center)[
+		#image("example2_4.svg", height: 85%)
+	]
+]
+
+#slide[
+	=== Beispiel 2
+
+	#align(center)[
+		#image("example2_5.svg", height: 85%)
 	]
 ]
 
