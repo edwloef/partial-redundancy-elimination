@@ -119,94 +119,60 @@
 ]
 
 #slide[
-	=== Definitionen (1/4)
-
-	- lokale Verfügbarkeit -- ein Ausdruck $e$ ist lokal verfügbar am Ausgang
-		des Knotens $i$, falls $e$ in $i$ vorkommt und die Aussage in $i$ die
-		Operanden von $e$ nicht verändert
-	#show: later
-	- lokale Erwartung -- ein Ausdruck $e$ ist lokal erwartet am Eingang des
-		Knotens $i$, falls $e$ in $i$ vorkommt
-	#show: later
-	- Transparenz -- ein Ausdruck $e$ ist transparent im Knoten $i$, falls die
-		Berechnung der Aussage in $i$ die Operanden von $e$ nicht verändert
-]
-
-#slide[
-	=== Definitionen (2/4)
-
-	- Verfügbarkeit -- ein Ausdruck $e$ ist verfügbar am Punkt $p$, falls $e$ in
-		jedem Pfad von $"entry"$ zu $p$ berechnet wird, und danach die Operanden
-		von $e$ unverändert bleiben
-	#show: later
-	- Erwartung -- ein Ausdruck $e$ ist erwartet am Punkt $p$, falls $e$ in
-		jedem Pfad von $p$ zu $"exit"$ berechnet wird, und bis dahin alle
-		Operanden von $e$ unverändert bleiben
-	#show: later
-	- Sicherheit -- ein Punkt $p$ ist sicher bezüglich dem Einfügen eines
-		Ausdrucks $e$, falls $e$ am Punkt $p$ entweder verfügbar oder erwartet
-		ist
-]
-
-#slide[
-	=== Definitionen (3/4)
-
-	- teilweise Verfügbarkeit -- ein Ausdruck $e$ ist teilweise verfügbar am
-		Punkt $p$, falls es mindestens ein Pfad von $"entry"$ zu $p$ gibt, in
-		dem $e$ berechnet wird, und danach die Operanden von $e$ unverändert
-		bleiben
-	#show: later
-	- sichere teilweise Verfügbarkeit -- ein Ausdruck $e$ ist sicher teilweise
-		verfügbar am Punkt $p$, falls er an $p$ teilweise verfügbar ist und
-		der Pfad von dem Punkt $k$, ab dem $e$ an $p$ teilweise verfügbar ist,
-		zu $p$, sicher ist
-	#show: later
-	- teilweise Redundanz -- ein Ausdruck $e$ ist teilweise redundant am Punkt
-		$p$ falls $e$ teilweise verfügbar am Punkt $p$ ist
-]
-
-#slide[
-	=== Definitionen (4/4)
-
-	- teilweise Erwartung -- ein Ausdruck $e$ ist teilweise erwartet am Punkt
-		$p$, falls es mindestens ein Pfad von $p$ zu $"exit"$ gibt, in dem $e$
-		berechnet wird, und bis dahin alle Operanden von $e$ unverändert bleiben
-	#show: later
-	- sichere teilweise Erwartung  -- ein Ausdruck $e$ ist sicher teilweise
-		erwartet am Punkt $p$, falls $e$ an $p$ teilweise erwartet ist und der
-		Pfad von dem Punkt $k$, ab dem $e$ teilweise erwartet ist, zu $p$,
-		sicher ist
-]
-
-#slide[
-	=== Notation
-
-	Für den Ausdruck $e$ gilt:
-	- $"AvLoc"_i$ --  $e$ ist am Ausgang des Knotens $i$ lokal verfügbar
-	- $"AntLoc"_i$ --  $e$ ist am Eingang des Knotens $i$ lokal erwartet
-	- $"Transp"_i$ --  $e$ ist im Knoten $i$ transparent
-	- $"AvIn"_i\/"AvOut"_i$ --  $e$ ist am Ein-/Ausgang des Knotens $i$
-		verfügbar
-	- $"AntIn"_i\/"AntOut"_i$ --  $e$ ist am Ein-/Ausgang des Knotens $i$
-		erwartet
-	- $"SpavPathIn"_i\/"SpavPathOut"_i$ --  Ein-/Ausgang des Knotens $i$ ist auf
-		dem sicher teilweise verfügbaren Pfad von $e$
-	- $"SredPathIn"_i\/"SredPathOut"_i$ --  Ein-/Ausgang des Knotens $i$ ist auf
-		dem sicher teilweise erwarteten Pfad von $e$
-]
-
-#slide[
 	== Grundidee
 
-	- Erkennung
-		- wir brauchen Informationen über teilweise verfügbare Ausdrücke
-	- Eliminierung
-		- wir brauchen Informationen über teilweise erwartete Ausdrücke
+	Wir suchen sichere Redundanzpfade für ein Ausdruck $e$.
+
+	\
 	#show: later
-	- wir suchen Redundanzpfade für ein Ausdruck $e$
-		- wir markieren alle Punkte, wo $e$ sowohl teilweise verfügbar als auch
-			teilweise erwartet ist
-		- wir verbinden adjazente markierte Punkte zu einem Redundanzpfad
+	- jeder Punkt, wo $e$ teilweise verfügbar und teilweise erwartet ist, ist
+		redundant
+		- wir verbinden adjazente Punkte, die redundant sind, zu einem einfachen
+			Redundanzpfad
+	#show: later
+	- jeder Punkt, wo $e$ verfügbar oder erwartet ist, ist sicher bezüglich dem
+		Einfügen von $e$
+	#show: later
+	- wir verbinden adjazente Punkte, die sowohl sicher als auch redundant sind,
+		zu einem sicheren Redundanzpfad
+	#show: later
+	- $e$ ist am Anfang und Ende von jedem seiner Redundanzpfade zu finden
+]
+
+#slide[
+	== Ansatz
+
+	Wir können einfache Redundanz ohne Datenflussanalyse berechnen.
+
+	\
+	#show: later
+	- von einem Knoten $s$, der $e$ beinhaltet, aus in Datenflussrichtung laufen
+		und Knoten als teilweise verfügbar markieren, bis $e$ nicht mehr
+		existiert oder $"exit"$ erreicht wird
+	#show: later
+	- von einem Knoten $t$, der $e$ beinhaltet, aus gegen
+		Datenflussrichtung laufen und Knoten als teilweise erwartet markieren,
+		bis ein Operand von $e$ definiert oder verändert wird
+	#show: later
+	- der Pfad von $s$ zu $t$, entlang dem $e$ an jedem Punkt sowohl teilweise
+		verfügbar als auch teilweise erwartet ist, bildet ein Redundanzpfad
+]
+
+#slide[
+	== Ansatz
+
+	Wir können Sicherheit mittels zwei klassischer Datenflussanalysen, der
+		Verfügbare-Ausdrücke-Analyse und der Erwartete-Ausdrücke-Analyse,
+		berechnen.
+
+	\
+	#show: later
+	- jeder Punkt, an dem $e$ entweder verfügbar oder erwartet ist, ist sicher
+		bezüglich dem Einfügen von $e$
+	#show: later
+	- sichere Redundanz wird dann wie einfache Redundanz berechnet, nur dass
+		ein Knoten nur als sicher teilweise verfügbar/erwartet markiert wird,
+		falls der jeweilige Punkt bezüglich dem Einfügen von $e$ auch sicher ist
 ]
 
 #slide[
@@ -239,4 +205,21 @@
 	#align(center)[
 		#image("example4.svg", height: 85%)
 	]
+]
+
+#slide[
+	=== Notation
+
+	Für den Ausdruck $e$ gilt:
+	- $"AvLoc"_i$ --  $e$ ist am Ausgang des Knotens $i$ lokal verfügbar
+	- $"AntLoc"_i$ --  $e$ ist am Eingang des Knotens $i$ lokal erwartet
+	- $"Transp"_i$ --  $e$ ist im Knoten $i$ transparent
+	- $"AvIn"_i\/"AvOut"_i$ --  $e$ ist am Ein-/Ausgang des Knotens $i$
+		verfügbar
+	- $"AntIn"_i\/"AntOut"_i$ --  $e$ ist am Ein-/Ausgang des Knotens $i$
+		erwartet
+	- $"SpavPathIn"_i\/"SpavPathOut"_i$ --  Ein-/Ausgang des Knotens $i$ ist auf
+		dem sicher teilweise verfügbaren Pfad von $e$
+	- $"SredPathIn"_i\/"SredPathOut"_i$ --  Ein-/Ausgang des Knotens $i$ ist auf
+		dem sicher teilweise erwarteten Pfad von $e$
 ]
