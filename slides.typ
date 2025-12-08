@@ -247,6 +247,10 @@
 	]
 ]
 
+#[
+	== Wie könnte das nun in Code aussehen?
+]
+
 #slide[
 	=== Available Expression Analysis
 
@@ -256,7 +260,7 @@
 			if i == CFG.entry:
 				i.AvOut = False
 			else:
-				i.AvOut = T
+				i.AvOut = TOP
 		changes = True
 		while changes:
 			changes = False
@@ -265,8 +269,8 @@
 					i.AvIn = all([p.AvOut for p in i.pred])
 					AvOut_i = i.AvLoc or i.AvIn and i.Transp
 					if i.AvOut != AvOut_i:
-						changes = True
 						i.AvOut = AvOut_i
+						changes = True
 	```
 ]
 
@@ -279,7 +283,7 @@
 			if i == CFG.exit:
 				i.AntIn = False
 			else:
-				i.AntIn = T
+				i.AntIn = TOP
 		changes = True
 		while changes:
 			changes = False
@@ -288,7 +292,99 @@
 					i.AntOut = all([p.AntIn for p in i.succ])
 					AntIn_i = i.AntLoc or i.AntOut and i.Transp
 					if i.AntIn != AntIn_i:
-						changes = True
 						i.AntIn = AntIn_i
+						changes = True
+	```
+]
+
+#slide[
+	=== Worklist
+
+	- Initialization:
+		- insert each node in $"CFG"$ that contains $"e"$ into the worklist
+	#show: later
+	- Processing:
+		- take node $"n"$ out of the worklist
+		- perform computation on $"n"$
+		- if $"n"$ has changed:
+			- insert successors of $"n"$ into worklist
+	#show: later
+	- Termination:
+		- the algorithm terminates when the worklist becomes empty
+]
+
+#slide[
+	=== Safe Partially Available Expression Analysis
+
+	#show raw: set text(size: 13pt)
+	```py
+	def SpavExpr(CFG, e):
+		worklist = []
+		for i in CFG.nodes:
+			i.SpavPathIn = False
+			i.SpavPathOut = False
+			i.VisitedIn = False
+			i.VisitedOut = False
+			if i.contains(e):
+				worklist.append(e)
+		while len(worklist) != 0:
+			i = worklist.pop()
+			if not i.VisitedOut:
+				i.VisitedOut = True
+				SpavPathOut_i = i.AvLoc or i.SpavPathIn and i.Transp
+				if i.SpavPathOut != SpavPathOut_i:
+					i.SpavPathOut = SpavPathOut_i
+					for s in i.succ:
+						if not s.VisitedIn and i.SafeIn:
+							s.VisitedIn = True
+							s.SpavPathIn = True
+							worklist.append(s)
+	```
+]
+
+#slide[
+	=== Safe Redundancy Path Computation
+
+	#show raw: set text(size: 13pt)
+	```py
+	def SredPath(CFG, e):
+		worklist = []
+		for i in CFG.nodes:
+			i.SredPathIn = False
+			i.SredPathOut = False
+			i.VisitedIn = False
+			i.VisitedOut = False
+			if i.contains(e):
+				worklist.append(e)
+		while len(worklist) != 0:
+			i = worklist.pop()
+			if not i.VisitedIn:
+				i.VisitedIn = True
+				SredPathIn_i = i.SpavIn and (i.AntLoc or i.SredPathOut and i.Transp)
+				if i.SredPathIn != SredPathIn_i:
+					i.SredPathIn = SredPathIn_i
+					for p in i.pred:
+						if not p.VisitedOut and p.SpavPathOut:
+							p.VisitedOut = True
+							p.SredPathOut = True
+							worklist.append(p)
+	```
+]
+
+#slide[
+	=== Partial Redundancy Elimination
+
+	```py
+	def PRE(CFG, e):
+		AvExpr(CFG, e)
+		AntExpr(CFG, e)
+		SpavExpr(CFG, e)
+		SredPath(CFG, e)
+		for i in CFG.nodes:
+			i.Insert = not i.SredPathIn and i.SredPathOut
+			i.Replace = i.AvLoc and i.SredPathOut or i.AntLoc and i.SredPathIn
+		for i in CFG.edges:
+			i.Insert = not CFG[i.from].SredPathOut and CFG[i.to].SredPathIn
+		Transform(CFG)
 	```
 ]
