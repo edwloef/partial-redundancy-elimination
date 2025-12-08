@@ -248,18 +248,47 @@
 ]
 
 #slide[
-	=== Notation
+	=== Available Expression Analysis
 
-	Für den Ausdruck $e$ gilt:
-	- $"AvLoc"_i$ --  $e$ ist am Ausgang des Knotens $i$ lokal verfügbar
-	- $"AntLoc"_i$ --  $e$ ist am Eingang des Knotens $i$ lokal erwartet
-	- $"Transp"_i$ --  $e$ ist im Knoten $i$ transparent
-	- $"AvIn"_i\/"AvOut"_i$ --  $e$ ist am Ein-/Ausgang des Knotens $i$
-		verfügbar
-	- $"AntIn"_i\/"AntOut"_i$ --  $e$ ist am Ein-/Ausgang des Knotens $i$
-		erwartet
-	- $"SpavPathIn"_i\/"SpavPathOut"_i$ --  Ein-/Ausgang des Knotens $i$ ist auf
-		dem sicher teilweise verfügbaren Pfad von $e$
-	- $"SredPathIn"_i\/"SredPathOut"_i$ --  Ein-/Ausgang des Knotens $i$ ist auf
-		dem sicher teilweise erwarteten Pfad von $e$
+	```py
+	def AvExpr(CFG, e):
+		for i in CFG.nodes:
+			if i == CFG.entry:
+				i.AvOut = False
+			else:
+				i.AvOut = T
+		changes = True
+		while changes:
+			changes = False
+			for i in CFG.nodes:
+				if i != CFG.entry:
+					i.AvIn = all([p.AvOut for p in i.pred])
+					AvOut_i = i.AvLoc or i.AvIn and i.Transp
+					if i.AvOut != AvOut_i:
+						changes = True
+						i.AvOut = AvOut_i
+	```
+]
+
+#slide[
+	=== Anticipated Expression Analysis
+
+	```py
+	def AntExpr(CFG, e):
+		for i in CFG.nodes:
+			if i == CFG.exit:
+				i.AntIn = False
+			else:
+				i.AntIn = T
+		changes = True
+		while changes:
+			changes = False
+			for i in CFG.nodes:
+				if i != CFG.exit:
+					i.AntOut = all([p.AntIn for p in i.succ])
+					AntIn_i = i.AntLoc or i.AntOut and i.Transp
+					if i.AntIn != AntIn_i:
+						changes = True
+						i.AntIn = AntIn_i
+	```
 ]
