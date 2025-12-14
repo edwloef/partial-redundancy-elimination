@@ -10,12 +10,25 @@ digraph G {
     post4 [shape=point,style=invis];
     4 -> post4 [style=invis];
 
-    1 [label="h = x + y\na = h",xlabel="1"];
+    1 [label="a = x + y",xlabel="1"];
     2 [label="",xlabel="2"];
-    3 [label="",xlabel="3"];
-    4 [label="b = h",xlabel="4"];
+    3 [label="",xlabel="3",color="red"];
+    4 [label="b = x + y",xlabel="4"];
 
-    1 -> 3 [color=black];
-    2 -> 3 [color=black,label="h = x + y"];
-    3 -> 4 [color=black];
+    1 -> 3 [style=invis];
+    2 -> 3 [style=invis];
+    3 -> 4 [style=invis];
+
+    1 -> 3 [color=purple,constraint=false];
+    3 -> 4 [color=purple,constraint=false];
+    4 -> post4 [color=purple,constraint=false];
+
+    4 -> 3 [color=orange,constraint=false];
+    3 -> 1 [color=orange,constraint=false];
+    3 -> 2 [color=orange,constraint=false];
+    1 -> pre1 [color=orange,constraint=false];
+    2 -> pre2 [color=orange,constraint=false];
+
+    1 -> 3 [color=red,arrowhead=none,constraint=false];
+    3 -> 4 [color=red,arrowhead=none,constraint=false];
 }
