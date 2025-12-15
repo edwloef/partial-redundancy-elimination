@@ -15,7 +15,7 @@
 	#set page(footer: none)
 	#set align(horizon)
 
-	Roy, Sivaraj, Paleri:\
+	Roy, Sivaraj, Paleri (2024):\
 	#text(1.5em)[Partial Redundancy Elimination in Two Iterative Data Flow
 		Analyses]
 
@@ -88,16 +88,16 @@
 
 	#show: later
 	- Morel, Renvoise (1979):
-		- vier Datenflussanalysen
+		- vier zweiseitige Datenflussanalysen
 		- nicht optimal
 	#show: later
 	- Knoop, Ruthing, Steffen (1992):
 		- vier Datenflussanalysen
 		- optimal
 	#show: later
-	- Roy, Paleri (2003):
+	- Roy, Paleri (2023):
 		- drei Datenflussanalysen
-		- nicht optimal
+		- optimal
 ]
 
 #slide[
@@ -133,14 +133,13 @@
 	#show: later
 	- wir verbinden adjazente Punkte, die teilweise verfügbar und teilweise
 		erwartet sind, zu einem Redundanzpfad
-	#show: later
-	*wir erkennen:* $e$ ist an Anfang und Ende aller seiner Redundanzpfade!
 ]
 
 #slide[
 	== Umsetzung
 
-	Wir können Redundanz ohne Datenflussanalyse berechnen.
+	*Wir erkennen:* $e$ ist am Anfang und Ende jeder seiner Redundanzpfade! Das
+		heißt wir können Redundanz ohne Datenflussanalyse berechnen!
 
 	\
 	#show: later
@@ -160,47 +159,19 @@
 	=== Beispiel 1
 
 	#align(center)[
-		#image("example1_1.svg", height: 85%)
-	]
-]
-
-#slide[
-	=== Beispiel 1
-
-	#align(center)[
-		#image("example1_2.svg", height: 85%)
-	]
-]
-
-#slide[
-	=== Beispiel 1
-
-	#align(center)[
-		#image("example1_3.svg", height: 85%)
-	]
-]
-
-#slide[
-	=== Beispiel 1
-
-	#align(center)[
-		#image("example1_4.svg", height: 85%)
-	]
-]
-
-#slide[
-	=== Beispiel 1
-
-	#align(center)[
-		#image("example1_5.svg", height: 85%)
-	]
-]
-
-#slide[
-	=== Beispiel 1
-
-	#align(center)[
-		#image("example1_6.svg", height: 85%)
+		#alternatives[
+			#image("example1_1.svg")
+		][
+			#image("example1_2.svg")
+		][
+			#image("example1_3.svg")
+		][
+			#image("example1_4.svg")
+		][
+			#image("example1_5.svg")
+		][
+			#image("example1_6.svg")
+		]
 	]
 ]
 
@@ -208,7 +179,7 @@
 	== Das reicht noch nicht!
 
 	Redundanz sagt uns nicht, wie wir das Programm transformieren können, ohne
-	auf manchen Pfaden ungebrauchte Berechnungen einzufügen
+	auf manchen Pfaden ungebrauchte Berechnungen einzufügen!
 
 	\
 	#show: later
@@ -312,7 +283,7 @@
 			changes = False
 			for i in CFG.V:
 				if i != CFG.exit:
-					i.AntOut = all([p.AntIn for p in i.succ])
+					i.AntOut = all([s.AntIn for s in i.succ])
 					AntIn_i = i.AntLoc or i.AntOut and i.Transp
 					if i.AntIn != AntIn_i:
 						i.AntIn = AntIn_i
@@ -408,6 +379,18 @@
 			i.Insert = not i.from.SredPathOut and i.to.SredPathIn
 		Transform(CFG)
 	```
+]
+
+#slide[
+	== Ergebnisse
+
+	Vergleich von LCM, PRE-3 und PRE-2, Implementierung in LLVM
+
+	\
+	#show: later
+	- PRE-2 braucht im Schnitt 50% so lange wie LCM
+	- PRE-2 braucht im Schnitt 80% so lange wie PRE-3
+	- PRE-2 erkennt genau so viele redundante Ausdrücke wie LCM und PRE-3
 ]
 
 #slide[
