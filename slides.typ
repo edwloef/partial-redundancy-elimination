@@ -139,7 +139,7 @@
 	== Umsetzung
 
 	*Wir erkennen:* $e$ ist am Anfang und Ende jeder seiner Redundanzpfade! Das
-		heißt wir können Redundanz ohne Datenflussanalyse berechnen!
+	heißt wir können Redundanz ohne Datenflussanalyse berechnen!
 
 	\
 	#show: later
@@ -205,7 +205,8 @@
 
 	#show: later
 	Mithilfe der Informationen über Sicherheit können wir sichere teilweise
-	Verfügbarkeit und sichere teilweise Erwartung berechnen.
+	Verfügbarkeit und sichere teilweise Erwartung ohne Datenflussanalyse
+	berechnen.
 
 	#show: later
 	Der Pfad von $s$ zu $t$, entlang dem $e$ an jedem Punkt sowohl sicher
